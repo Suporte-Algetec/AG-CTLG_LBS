@@ -1211,8 +1211,8 @@ renderBtn.addEventListener("click", async ()=>{
         container.style.position = container.style.position || 'relative';
         // garantir object-fit: cover
         try{ img.style.objectFit = 'cover'; }catch(e){}
-        // inicial object-position
-        if(!img.style.objectPosition) img.style.objectPosition = '50% 0%';
+        // inicial object-position — forçar topo
+        img.style.objectPosition = '50% 0%';
         img.style.cursor = 'grab';
 
         let startY = 0;
