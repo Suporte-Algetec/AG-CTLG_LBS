@@ -1197,6 +1197,24 @@ renderBtn.addEventListener("click", async ()=>{
   }
   
   win.document.body.innerHTML = htmlContent;
+  // garantir inline object-position no preview (força topo se CSS/usuário alterar)
+    try{
+    const winImg = win.document.querySelector('.cover-banner img');
+    if(winImg){
+      try{ winImg.style.objectFit = 'cover'; }catch(e){}
+      try{ winImg.style.setProperty('object-position','50% 0%','important'); }catch(e){}
+      // fallback: reaplica por alguns ciclos até o primeiro pointerdown
+      try{
+        let _cnt = 0;
+        const _int = win.setInterval(function(){
+          try{ winImg.style.setProperty('object-position','50% 0%','important'); }catch(e){}
+          _cnt++;
+          if(_cnt > 12) win.clearInterval(_int);
+        }, 40);
+        winImg.addEventListener('pointerdown', function(){ try{ win.clearInterval(_int); }catch(e){} }, { once: true });
+      }catch(e){}
+    }
+  }catch(e){ console.warn('Não foi possível forçar objectPosition no preview:', e); }
   // posicionar crop do banner antes da impressão (usando object-position)
   try{
     const dragScript = win.document.createElement('script');
@@ -1212,7 +1230,17 @@ renderBtn.addEventListener("click", async ()=>{
         // garantir object-fit: cover
         try{ img.style.objectFit = 'cover'; }catch(e){}
         // inicial object-position — forçar topo
-        img.style.objectPosition = '50% 0%';
+        img.style.setProperty('object-position','50% 0%','important');
+        // fallback: reaplica por alguns ciclos até o primeiro pointerdown
+        try{
+          let _cnt2 = 0;
+          const _int2 = setInterval(function(){
+            try{ img.style.setProperty('object-position','50% 0%','important'); }catch(e){}
+            _cnt2++;
+            if(_cnt2 > 12) clearInterval(_int2);
+          }, 40);
+          container.addEventListener('pointerdown', function(){ try{ clearInterval(_int2); }catch(e){} }, { once: true });
+        }catch(e){}
         img.style.cursor = 'grab';
 
         let startY = 0;
@@ -1232,7 +1260,9 @@ renderBtn.addEventListener("click", async ()=>{
         }
 
         function getCurrentPercent(){
-          const op = getComputedStyle(img).objectPosition || img.style.objectPosition || '50% 0%';
+          let op = getComputedStyle(img).objectPosition || img.style.objectPosition || '50% 0%';
+          // coerça valores genéricos/centrados para topo inicial
+          if(/center/i.test(op) || /\b50%\s+50%\b/.test(op)) op = '50% 0%';
           const parts = op.split(/\s+/);
           const y = parts.length === 1 ? parts[0] : parts[1];
           if(y.endsWith('%')) return parseFloat(y);
@@ -1246,7 +1276,7 @@ renderBtn.addEventListener("click", async ()=>{
 
         function setPercent(p){
           p = clamp(p, 0, 100);
-          img.style.objectPosition = '50% ' + p + '%';
+          img.style.setProperty('object-position', '50% ' + p + '%', 'important');
         }
 
         function onPointerDown(e){
