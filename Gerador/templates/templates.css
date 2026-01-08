@@ -1,0 +1,642 @@
+/* Reset / variáveis / fontes */
+:root {
+    --red-main: #510404;
+    --red-mid: #890D0D;
+    --red-light: #EB7E71;
+    --text-strong: #222;
+    --text-muted: #666;
+    --bg: #fff;
+    --cinza-mais-a: #3B3A3A;
+}
+
+/* Faixa lateral: moved here so templates control its look.
+   Uses CSS variables for palette-aware gradients set by JS on the page container. */
+.faixa-esquerda {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  z-index: 1000;
+  /* gradient uses CSS vars; fallbacks match the original defaults */
+  background: linear-gradient(to bottom, var(--stripe-main, var(--red-main)) 0%, var(--stripe-mid, var(--red-mid)) 45%, var(--stripe-light, var(--red-light)) 100%);
+  box-shadow: 2px 0 10px rgba(0,0,0,.06);
+}
+
+/* specific covers */
+.cover-stripe { /* placeholder: cover-specific tweaks can go here if needed */ }
+.back-cover-page .faixa-esquerda {
+  /* default back cover gradient (same as previous inline) */
+  background: linear-gradient(to bottom, var(--stripe-main, var(--red-main)) 0%, var(--stripe-mid, var(--red-mid)) 65%, var(--stripe-light, var(--red-light)) 100%);
+}
+
+/* Fontes (paths relativos à pasta templates/) */
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Thin.ttf') format('truetype');
+    font-weight: 100;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-UltraLight.ttf') format('truetype');
+    font-weight: 200;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Light.ttf') format('truetype');
+    font-weight: 300;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Heavy.ttf') format('truetype');
+    font-weight: 900;
+}
+@font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Black.ttf') format('truetype');
+    font-weight: 950;
+}
+
+/* Reset básico */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; width: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+    font-family: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-strong);
+    background: var(--bg);
+    line-height: 1.5;
+}
+
+/* Helper comum para imagens/logos */
+.logo-section img { display: block; max-width: 100%; height: auto; }
+
+/* Comum: container de página (uso em preview e na exportação) */
+.page-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: #efefef;
+    padding: 12px;
+}
+.page {
+    background: #fff;
+    box-shadow: none;
+    overflow: visible;
+    page-break-after: always;
+    break-after: page;
+    width: 100%;
+    max-width: 1166px; /* centraliza e limita largura para preview */
+    margin: 12px auto;
+    padding: 12px;
+    border-radius: 0;
+}
+.page.template-page {
+  height: 210mm;
+  overflow: hidden;
+}
+
+/* ----- Capa (capa.html) ----- */
+.cover .divbody {
+    background-image: url('./images/img_vector.png');
+    background-repeat: repeat;
+    background-size: auto;
+}
+.cover .main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+    min-height: 100%;
+    padding: 16px;
+}
+
+.cover .main-container,
+.backcover .main-container,
+.integrated .container {
+  height: 100%;
+}
+
+.cover .content-stack {
+    position: relative;
+    width: 100%;
+    max-width: 1266px;
+    min-height: 610px;
+    padding: 20px;
+}
+.cover .hero-title {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 65%;
+    white-space: nowrap;
+    overflow: visible;
+}
+.cover .hero-title h1 {
+    font-family: 'Gilroy';
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 37px;
+    text-transform: uppercase;
+    margin-left: 126px;
+    background: linear-gradient(90deg, #bb243e 0%, #520606 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ===== FIX DEFINITIVO: practice-counter print-safe ===== */
+.cover .practice-icon-container {
+  position: relative;
+  width: 15%;
+  flex-shrink: 0;
+}
+
+.cover .practice-counter {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 76px;
+  border-radius: 20px;
+
+  /* PRINT-SAFE */
+  display: block;
+  text-align: center;
+  line-height: 76px;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+
+  z-index: 1;
+  overflow: hidden;
+}
+
+.cover .practice-counter-text {
+  display: inline;
+  line-height: inherit;
+}
+
+
+.cover .version-badge {
+    background: linear-gradient(180deg, #bb243e 0%, #bf1623 100%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.25);
+}
+.cover .practice-item { display: flex; justify-content: flex-end; align-items: center; width: 100%; gap: 16px; }
+.cover .practice-text { font-size: 14px; font-weight: 700; text-align: right; text-transform: uppercase; color: #333; width: 65%; }
+.cover .practice-icon { width: 46px; height: 46px; border-radius: 22px; display: flex; align-items: center; justify-content: center; padding: 4px; }
+
+/* footer */
+.cover .footer-branding { display: flex; flex-direction: column; align-items: flex-end; margin-top: 36px; }
+
+/* ----- Contracapa (contracapa.html) ----- */
+.backcover .main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    padding: 16px;
+    position: relative;
+}
+.backcover .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1166px;
+    margin: 0 auto;
+    position: relative;
+}
+.backcover .header-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; padding: 0 16px; }
+.backcover .main-title {
+    font-size: 24px;
+    font-family: 'Gilroy';
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 16px;
+    padding-top: 2%;
+}
+.backcover .stat-card { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.backcover .stat-number { font-size: 32px; font-weight: 700; text-transform: uppercase; }
+.backcover .stat-label { font-size: 14px; text-transform: uppercase; color: #333; text-align: center; }
+
+/* ----- Catálogo Integrado (catalogointegrado.html) ----- */
+.integrated .container {
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    overflow: visible;
+    background-color: var(--bg);
+    padding: 12px;
+}
+.integrated .background { position: absolute; inset: 0; background: var(--bg); }
+.integrated .content { position: absolute; left: 64px; top: 139px; width: 1181px; height: auto; }
+.integrated .image-outline { position: absolute; left: 600px; right: 15px; top: 0; width: 565px; height: 134.85px; outline: 3px solid rgba(137,13,13,0.25); }
+.integrated .text-block { position: relative; width: 580px; padding-top: 5px; display: block; font-size: 20px; line-height: 28px; color: black; }
+.integrated .image-border { position: absolute; left: 600px; right: 15px; top: 155px; width: 565px; height: 272.13px; outline: 3px solid rgba(137,13,13,0.25); }
+.integrated .text-description { position: relative; width: 580px; padding-top: 80px; display: flex; flex-direction: column; justify-content: center; font-size: 20px; line-height: 28px; color: black; }
+.integrated .title { position: absolute; left: 64px; top: 69px; font-size: 38px; font-weight: 500; text-transform: uppercase; line-height: 61px; color: var(--red-mid); }
+.integrated .cta {
+    position: absolute;
+    left: 64px;
+    top: 580px;
+    width: 1148px;
+    padding: 5px 10px;
+    background: var(--red-mid);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 79px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #fff;
+}
+
+/* Utilitários e responsividade */
+img { max-width: 100%; height: auto; display: block; }
+.container, .content-wrapper, .content-stack { box-sizing: border-box; }
+
+@media (min-width: 1024px) {
+    .cover .hero-title h1 { font-size: 64px; line-height: 74px; }
+    .backcover .main-title { font-size: 28px; }
+    .backcover .stat-number { font-size: 40px; }
+}
+@media (min-width: 768px) {
+    .backcover .main-title { font-size: 32px; }
+    .backcover .stat-number { font-size: 45px; }
+}
+
+/* Impressão: forçar paginação sem alterar layout da tela */
+@media print {
+    html, body { margin: 0; padding: 0; }
+    .page-wrapper { background: transparent; padding: 0; }
+    .page { box-shadow: none; page-break-after: always; break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    /* segurança: preserve small top/bottom safety to avoid cut by some printers */
+}
+
+
+/* =========================
+   CAPA DO CATÁLOGO
+========================= */
+
+.cover-page {
+  height: 210mm;
+  width: 297mm;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.cover-wrap {
+  height: 100%;
+  padding: 48px 32px 48px 72px;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 40px;
+}
+
+/* HEADER */
+
+.cover-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cover-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--cinza-mais-a);
+    font-family: 'Gilroy';
+    display: inline;
+    text-transform: uppercase;
+}
+
+.back-cover-content h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--cinza-mais-a);
+    font-family: 'Gilroy';
+    display: inline;
+    text-transform: uppercase;
+}
+
+.cover-header p {
+  font-size: 18px;
+  margin: 8px 0 0;
+  color: #555;
+}
+
+.cover-header .cover-version {
+  margin: 0;
+  align-self: center;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.cover-version {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--red-main), var(--red-mid));
+}
+
+.cover-logo {
+  height: 52px;
+  width: auto;
+}
+
+/* MÉTRICAS */
+.cover-metrics {
+  display: flex;
+  gap: 24px;
+}
+
+.metric-card {
+  flex: 1;
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+.metric-card.primary {
+  background: linear-gradient(135deg, var(--red-main), var(--red-mid));
+  color: #fff;
+}
+
+.metric-card.highlight {
+  background: linear-gradient(135deg, #035C55, #11C16C);
+  color: #fff;
+}
+
+.metric-value {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.metric-label {
+  margin-top: 8px;
+  font-size: 16px;
+  opacity: .9;
+}
+
+/* Contracapa: alinhamento do CTA com ícone (override para img display:block global) */
+.back-cover-cta-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.back-cover-cta-inline img {
+  display: inline-block; /* override global img {display:block} */
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* =========================
+   PILLS – PÁGINA CAPA
+========================= */
+
+.cover-areas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+
+/* pill base */
+.area-pill {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  min-height: 92px;
+  background: #f7f9fa;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ícone */
+.area-pill img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+}
+/* texto */
+.area-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.area-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+/* número em destaque */
+.area-count {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* legenda */
+.area-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* =========================
+   CORES POR ÁREA
+========================= */
+
+.area-pill.saude {
+  background: linear-gradient(135deg, var(--red-main), var(--red-mid));
+  color: #fff;
+}
+
+.area-pill.exatas {
+  background: linear-gradient(135deg, #0F52BA, #1D8EEA);
+  color: #fff;
+}
+
+.area-pill.naturais {
+  background: linear-gradient(135deg, #035C55, #11C16C);
+  color: #fff;
+}
+
+.area-pill.humanas {
+  background: linear-gradient(135deg, #A36405, #E39C0A);
+  color: #fff;
+}
+
+/* garante texto branco nas pills coloridas */
+.area-pill.saude *,
+.area-pill.exatas *,
+.area-pill.naturais *,
+.area-pill.humanas * {
+  color: #fff;
+}
+
+/* =========================
+   PRINT SAFE
+========================= */
+
+@media print {
+  .area-pill {
+    box-shadow: none;
+  }
+}
+
+/* =========================
+   FAIXA ESQUERDA – CAPA
+========================= */
+
+.cover-page .cover-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  width: 34px;
+  z-index: 2;
+
+  background: linear-gradient(
+    to bottom,
+    #0F52BA 5%,
+    #11C16C 15%,
+    #E39C0A 25%,
+    var(--red-mid) 40%,
+    var(--red-main) 100%
+  );
+}
+
+.cover-page .wrap {
+  padding-left: 48px;
+}
+
+.cover-banner {
+  width: 100%;
+  height: 220px;              /* controla a altura do banner */
+  overflow: hidden;           /* corta o excesso */
+  border-radius: 0 0 24px 24px;
+  position: relative;
+}
+
+.cover-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;    /* posicionamento do corte */
+  display: block;
+}
+
+/* CONTRACAPA DO CATÁLOGO */
+
+.back-cover-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  height: 100%;
+  padding: 48px 56px 32px 56px;
+  box-sizing: border-box;
+  gap: 32px;
+}
+
+.back-cover-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.back-cover-content p {
+  font-size: 18px;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.back-cover-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-cover-image img {
+  max-width: 648px;
+  max-height: 364px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+
+.back-cover-cta {
+  position: absolute;
+  left: 56px;
+  bottom: 24px;
+  background: #8b0d12;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.back-cover-cta a {
+  color: #fff;
+  text-decoration: none;
+}

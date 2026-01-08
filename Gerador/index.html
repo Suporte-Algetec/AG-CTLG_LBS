@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Catálogo de Práticas</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+</head>
+<body>
+<div class="app centered">
+  <div class="card">
+    <header class="hero">
+      <h1>Gerador de Catálogo Algetec</h1>
+      <p class="subtitle">Envie sua planilha de laboratórios virtuais e gere o catálogo em uma nova guia.</p>
+    </header>
+
+    <div class="controls">
+      <label class="control">
+        <span>Arquivo (.csv, .xlsx, .xls) (obrigatório)</span>
+        <input id="file-input" type="file" accept=".csv, .xlsx, .xls" />
+      </label>
+      <label class="control">
+        <span>Link do planilha</span>
+        <input id="lms-link" type="url" placeholder="link para a planilha" />
+      </label>
+      <label class="control">
+        <span>Idioma / Language</span>
+        <select id="lang-select">
+          <option value="pt">Português (PT-BR)</option>
+          <option value="es">Español (ES)</option>
+        </select>
+      </label>
+      <label class="control">
+        <span>Versão do catálogo:</span>
+      <input id="catalogVersion" type="number" placeholder="Ex: 41" />
+      </label>
+
+      
+
+        <label class="cover-field cover-front-image">
+          <span class="label-text">Imagem da capa (frente)</span>
+          <input id="front-image-input" type="file" accept="image/*" />
+        </label>
+        <label class="cover-field cover-image">
+          <span class="label-text">Imagem da contracapa</span>
+          <input id="back-image-input" type="file" accept="image/*" />
+        </label>
+        <label class="cover-field cover-title">
+          <span class="label-text">Título da contracapa</span>
+          <input id="back-title" type="text" placeholder="CATÁLOGO INTEGRADO" />
+        </label>
+        <label class="cover-field cover-text">
+          <span class="label-text">Texto da contracapa</span>
+          <textarea id="back-text" rows="2" placeholder="Texto da contracapa">O Catálogo Integrado apoia instituições parceiras na curadoria de conteúdos, oferecendo busca por Inteligência Artificial, filtros por nível de ensino, área, curso ou disciplina e pesquisa por palavra-chave ou ementa.</textarea>
+        </label>
+        <label class="cover-field cover-cta">
+          <span class="label-text">CTA da contracapa</span>
+          <textarea id="back-cta" rows="1" placeholder="">Ainda não utiliza o Catálogo Integrado em sua instituição de ensino? Entre em contato conosco!</textarea>
+        </label>
+
+      <button id="render-btn" class="btn primary large">Gerar catálogo</button>
+      <div id="messages" class="messages"></div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+      <button id="toggle-cover-btn" type="button" class="btn toggle-btn">Outras opções</button>
+    </div>
+  </div>
+</div>
+<script src="gerador.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+</body>
+</html>
