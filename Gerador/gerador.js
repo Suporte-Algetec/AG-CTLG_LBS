@@ -1286,14 +1286,14 @@ renderBtn.addEventListener("click", async ()=>{
   win.focus();
 
 // Abre o menu de impressão automaticamente após abrir o preview
-//  try{
-//    let _printed = false;
-//    const triggerPrint = () => {
-//      if(_printed) return;
-//      _printed = true;
-//      try{ win.print(); }catch(e){ console.warn('Falha ao acionar print na janela de preview:', e); }
-//    };
-//    try{ win.addEventListener('load', triggerPrint, { once: true }); }catch(e){}
-//    setTimeout(triggerPrint, 600);
-//  }catch(e){ console.warn('Não foi possível agendar impressão automática:', e); }
+  try{
+    let _printed = false;
+    const triggerPrint = () => {
+      if(_printed) return;
+      _printed = true;
+      try{ win.print(); }catch(e){ console.warn('Falha ao acionar print na janela de preview:', e); }
+    };
+    try{ win.addEventListener('load', triggerPrint, { once: true }); }catch(e){}
+    setTimeout(triggerPrint, 600);
+  }catch(e){ console.warn('Não foi possível agendar impressão automática:', e); }
 });
