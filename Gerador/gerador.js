@@ -29,20 +29,15 @@ const toggleCoverBtn = document.getElementById('toggle-cover-btn');
 
 function updateCoverFieldsVisibility() {
   try {
-    const isEs = langSelect && langSelect.value === 'es';
     document.querySelectorAll('.cover-field').forEach(el => {
       // animation-friendly: toggle a .visible class
-      if (isEs) {
-        el.classList.remove('visible');
-      } else {
-        if (coverCustomized) el.classList.add('visible');
-        else el.classList.remove('visible');
-      }
+      if (coverCustomized) el.classList.add('visible');
+      else el.classList.remove('visible');
     });
 
     if (toggleCoverBtn) {
-      toggleCoverBtn.disabled = !!isEs;
-      toggleCoverBtn.textContent = isEs ? 'Outras opções' : (coverCustomized ? 'Ocultar outras opções' : 'Outras opções');
+      toggleCoverBtn.disabled = false;
+      toggleCoverBtn.textContent = coverCustomized ? 'Ocultar outras opções' : 'Outras opções';
     }
   } catch (e) {
     console.error('updateCoverFieldsVisibility error', e);
@@ -286,6 +281,7 @@ function insertUnifiedCoverPage(preview, data, locale) {
           src="${data.frontImage || 'images/banner.png'}"
           alt="${cover.bannerAlt}"
         />
+        ${data.bannerCaption ? `<p class="cover-banner-caption">${data.bannerCaption}</p>` : ''}
       </div>
 
       <!-- ÁREAS -->
@@ -507,11 +503,15 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     try{ frontImageUrl = URL.createObjectURL(frontImageInput.files[0]); }catch(e){ frontImageUrl = null; }
   }
 
+  const bannerCaptionInput = document.getElementById('cover-banner-caption');
+  const bannerCaption = bannerCaptionInput ? bannerCaptionInput.value.trim() : '';
+
   insertUnifiedCoverPage(preview, {
     version,
     newLabs,
     totalLabs,
     frontImage: frontImageUrl,
+    bannerCaption,
     byArea: {
       saude,
       exatas,
@@ -1225,7 +1225,6 @@ renderBtn.addEventListener("click", async ()=>{
         if(!container) return;
         const img = container.querySelector('img');
         if(!img) return;
-        container.style.overflow = 'hidden';
         container.style.position = container.style.position || 'relative';
         // garantir object-fit: cover
         try{ img.style.objectFit = 'cover'; }catch(e){}
