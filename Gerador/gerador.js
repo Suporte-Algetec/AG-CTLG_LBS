@@ -37,7 +37,10 @@ function updateCoverFieldsVisibility() {
 
     if (toggleCoverBtn) {
       toggleCoverBtn.disabled = false;
-      toggleCoverBtn.textContent = coverCustomized ? 'Ocultar outras opções' : 'Outras opções';
+      const _btnLang = (langSelect && langSelect.value) || 'pt';
+      toggleCoverBtn.textContent = coverCustomized
+        ? (_btnLang === 'es' ? 'Ocultar otras opciones' : 'Ocultar outras opções')
+        : (_btnLang === 'es' ? 'Otras opciones' : 'Outras opções');
     }
   } catch (e) {
     console.error('updateCoverFieldsVisibility error', e);
@@ -54,7 +57,10 @@ if (toggleCoverBtn) {
 // Initialize: cover fields hidden until user opts in
 coverCustomized = false;
 if (langSelect) {
-  langSelect.addEventListener('change', updateCoverFieldsVisibility);
+  langSelect.addEventListener('change', () => {
+    updateFieldsForLocale(langSelect.value);
+    updateCoverFieldsVisibility();
+  });
 }
 updateCoverFieldsVisibility();
 
@@ -66,7 +72,7 @@ const LOCALES = {
     pillText: 'Novo'
   },
   es: {
-    order: ["SALUD","CIENCIAS NATURALES","EXATAS","HUMANIDADES"],
+    order: ["SALUD","CIENCIAS NATURALES","EXACTAS","EXATAS","HUMANIDADES"],
     linkText: 'Enlaces para la integración en su LMS',
     headers: { name: 'Nombre del laboratorio', idPratica: 'ID práctica', idCatalogo: 'ID catálogo integrado', empty: '' },
     pillText: 'Nuevo'
@@ -85,13 +91,48 @@ LOCALES.es.cover = {
   title: 'Laboratorios Virtuales',
   metrics: { totalLabel: 'Laboratorios virtuales', newLabel: 'Nuevos laboratorios' },
   bannerAlt: 'Laboratorio virtual',
-  areas: { saude: 'Salud', exatas: 'Ingenierías y Arquitectura', naturais: 'Ciencias Naturales', humanas: 'Humanidades' },
+  areas: { saude: 'Salud', exatas: 'Exactas', naturais: 'Ciencias Naturales', humanas: 'Humanidades' },
   areaLabel: 'prácticas'
 };
 
+LOCALES.pt.backCover = {
+  text: 'O Catálogo Integrado apoia instituições parceiras na curadoria de conteúdos, oferecendo busca por Inteligência Artificial, filtros por nível de ensino, área, curso ou disciplina e pesquisa por palavra-chave ou ementa.',
+  cta: 'Ainda não utiliza o Catálogo Integrado em sua instituição de ensino? Entre em contato conosco!',
+  bannerCaptionPlaceholder: 'Digite a legenda do banner',
+  backTitlePlaceholder: 'CATÁLOGO INTEGRADO',
+  backTextPlaceholder: 'Texto da contracapa',
+};
+LOCALES.es.backCover = {
+  text: 'El Catálogo Integrado apoya a las instituciones socias en la curaduría de contenidos, ofreciendo búsqueda por Inteligencia Artificial, filtros por nivel de enseñanza, área, curso o disciplina y búsqueda por palabra clave o programa.',
+  cta: '¿Aún no utiliza el Catálogo Integrado en su institución educativa? ¡Contáctenos!',
+  bannerCaptionPlaceholder: 'Escriba el pie de foto del banner',
+  backTitlePlaceholder: 'CATÁLOGO INTEGRADO',
+  backTextPlaceholder: 'Texto de la contraportada',
+};
 
+const _userModifiedFields = new Set();
+['cover-banner-caption', 'back-title', 'back-text', 'back-cta'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => _userModifiedFields.add(id));
+});
 
-const RESERVED_BOTTOM_MM = 12; 
+function updateFieldsForLocale(lang) {
+  const bc = (LOCALES[lang] || LOCALES.pt).backCover;
+  if (!bc) return;
+  [
+    { id: 'cover-banner-caption', key: 'bannerCaptionPlaceholder', attr: 'placeholder' },
+    { id: 'back-title',           key: 'backTitlePlaceholder',     attr: 'placeholder' },
+    { id: 'back-text',            key: 'text',                     attr: 'value' },
+    { id: 'back-cta',             key: 'cta',                      attr: 'value' },
+  ].forEach(({ id, key, attr }) => {
+    if (_userModifiedFields.has(id)) return;
+    const el = document.getElementById(id);
+    if (!el || bc[key] === undefined) return;
+    el[attr] = bc[key];
+  });
+}
+
+const RESERVED_BOTTOM_MM = 12;
 
 
 function mmToPx(mm){
@@ -453,7 +494,9 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     } else if (
       macro.includes('ENGENHARIA') ||
       macro.includes('EXATA') ||
-      macro.includes('ARQUITETURA')
+      macro.includes('EXACTA') ||
+      macro.includes('ARQUITETURA') ||
+      macro.includes('INGENIERIA')
     ) {
       exatas++;
     } else if (
@@ -529,13 +572,12 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
         backImageUrl = URL.createObjectURL(backImageInput.files[0]);
       }catch(e){ backImageUrl = null; }
     }
-    const backTitle = (document.getElementById('back-title') && document.getElementById('back-title').value.trim()) || 'CATÁLOGO INTEGRADO';
-    const backText = (document.getElementById('back-text') && document.getElementById('back-text').value.trim()) || 'O Catálogo Integrado apoia instituições parceiras na curadoria de conteúdos, oferecendo busca por Inteligência Artificial, filtros por nível de ensino, área, curso ou disciplina e pesquisa por palavra-chave ou ementa.';
-    const backCta = (document.getElementById('back-cta') && document.getElementById('back-cta').value.trim()) || 'Ainda não utiliza o Catálogo Integrado em sua instituição de ensino? Entre em contato conosco!';
-    // não inserir contracapa para espanhol
-    if(selectedLang !== 'es'){
-      insertBackCoverPage(preview, { image: backImageUrl || 'images/catalogo-integrado.png', title: backTitle, text: backText, cta: backCta });
-    }
+    const _bcFallback = (LOCALES[selectedLang] || LOCALES.pt).backCover || LOCALES.pt.backCover;
+    const backTitle = (document.getElementById('back-title') && document.getElementById('back-title').value.trim()) || _bcFallback.backTitlePlaceholder;
+    const backText = (document.getElementById('back-text') && document.getElementById('back-text').value.trim()) || _bcFallback.text;
+    const backCta = (document.getElementById('back-cta') && document.getElementById('back-cta').value.trim()) || _bcFallback.cta;
+    const _defaultBackImage = selectedLang === 'es' ? 'images/catalogo-integrado-es.png' : 'images/catalogo-integrado.png';
+    insertBackCoverPage(preview, { image: backImageUrl || _defaultBackImage, title: backTitle, text: backText, cta: backCta });
   }catch(e){ console.warn('Falha ao inserir contracapa:', e); }
   
   const _prevDisplay = preview.style.display;
@@ -1073,11 +1115,21 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
       preview.appendChild(container);
     }
     
-    try { fixPageOverflows(); } catch(e){ console.warn('fixPageOverflows:', e); }
-    try { shrinkOverflowingCells(9); } catch(e){ console.warn('shrinkOverflowingCells:', e); }
   });
 
-  
+  try { fixPageOverflows(); } catch(e){ console.warn('fixPageOverflows:', e); }
+  try { shrinkOverflowingCells(9); } catch(e){ console.warn('shrinkOverflowingCells:', e); }
+
+  // remove páginas sem linhas de dados reais (tbody vazio ou apenas com cabeçalho de grupo)
+  try {
+    preview.querySelectorAll('.page:not(.cover-page):not(.back-cover-page)').forEach(page => {
+      const tbody = page.querySelector('tbody');
+      if (!tbody) return;
+      const hasDataRows = Array.from(tbody.children).some(tr => !tr.classList.contains('group-header'));
+      if (!hasDataRows) page.remove();
+    });
+  } catch(e){ console.warn('empty-page cleanup:', e); }
+
   preview.style.display = _prevDisplay;
   preview.style.visibility = _prevVisibility;
   preview.style.position = _prevPosition;
