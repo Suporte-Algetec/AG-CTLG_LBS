@@ -72,7 +72,7 @@ const LOCALES = {
     pillText: 'Novo'
   },
   es: {
-    order: ["SALUD","CIENCIAS NATURALES","INGENIERÍAS Y CIENCIAS EXACTAS","EXATAS","HUMANIDADES"],
+    order: ["SALUD","CIENCIAS NATURALES","INGENIERÍAS Y CIENCIAS EXACTAS","HUMANIDADES"],
     linkText: 'Enlaces para la integración en su LMS',
     headers: { name: 'Nombre del laboratorio', idPratica: 'ID práctica', idCatalogo: 'ID catálogo integrado', empty: '' },
     pillText: 'Nuevo'
