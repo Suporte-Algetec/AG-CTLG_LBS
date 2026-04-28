@@ -72,7 +72,7 @@ const LOCALES = {
     pillText: 'Novo'
   },
   es: {
-    order: ["SALUD","CIENCIAS NATURALES","EXACTAS","EXATAS","HUMANIDADES"],
+    order: ["SALUD","CIENCIAS NATURALES","INGENIERÍAS Y CIENCIAS EXACTAS","EXATAS","HUMANIDADES"],
     linkText: 'Enlaces para la integración en su LMS',
     headers: { name: 'Nombre del laboratorio', idPratica: 'ID práctica', idCatalogo: 'ID catálogo integrado', empty: '' },
     pillText: 'Nuevo'
@@ -91,7 +91,7 @@ LOCALES.es.cover = {
   title: 'Laboratorios Virtuales',
   metrics: { totalLabel: 'Laboratorios virtuales', newLabel: 'Nuevos laboratorios' },
   bannerAlt: 'Laboratorio virtual',
-  areas: { saude: 'Salud', exatas: 'Exactas', naturais: 'Ciencias Naturales', humanas: 'Humanidades' },
+  areas: { saude: 'Salud', exatas: 'INGENIERÍAS Y CIENCIAS EXACTAS', naturais: 'Ciencias Naturales', humanas: 'Humanidades' },
   areaLabel: 'prácticas'
 };
 
@@ -645,7 +645,7 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
   
   normalizedPalettes[normalizeKey('SALUD')] = palettes['SAÚDE'];
   normalizedPalettes[normalizeKey('CIENCIAS NATURALES')] = palettes['CIÊNCIAS NATURAIS'];
-  normalizedPalettes[normalizeKey('EXACTAS')] = palettes['ENGENHARIAS E ARQUITETURA'];
+  normalizedPalettes[normalizeKey('INGENIERÍAS Y CIENCIAS EXACTAS')] = palettes['ENGENHARIAS E ARQUITETURA'];
   normalizedPalettes[normalizeKey('HUMANIDADES Y CIENCIAS SOCIALES APLICADAS')] = palettes['HUMANAS'];
   normalizedPalettes[normalizeKey('HUMANAS / SOCIAIS APLICADAS')] = palettes['HUMANAS'];
   function paletteFor(macro){
