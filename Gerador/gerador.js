@@ -147,7 +147,7 @@ function mmToPx(mm){
 }
 
 function normalizeRows(rawRows){
-  const norm = rawRows.map(r => ({
+  const norm = rawRows.slice(1).map(r => ({
     macroarea: (r[0]||"").toString().trim(),
     microarea: (r[1]||"").toString().trim(),
     nome: (r[2]||"").toString().trim(),
