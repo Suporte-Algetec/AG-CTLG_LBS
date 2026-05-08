@@ -1,0 +1,295 @@
+:root {
+  --red-main: #510404;
+  --red-mid: #890D0D;
+  --red-light: #EB7E71;
+  --text-strong: #222;
+  --text-muted: #666;
+  --bg: #fff;
+  --container-max: 1160px;
+  --gutter-x: 32px;
+  --row-gap: 12px;
+  --cell-y: 8px;
+  /* individual paddings (fallback to --cell-y for backward compatibility) */
+  --cell-pt: var(--cell-y);
+  --cell-pr: 8px;
+  --cell-pb: var(--cell-y);
+  --cell-pl: 8px;
+  /* ajustar um pouco a largura da coluna "novo" (segunda coluna) */
+  --col1: 68%;
+  --col2: 8%;
+  --col3: 14%;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "DM Sans", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-strong);
+}
+
+/* Layout inspirado no modelo */
+.wrap { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter-x); }
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  gap: 12px;               /* remove gap exagerado */
+  padding-left: 28px;
+  position: relative;
+  z-index: 1001;
+}
+/* título e botão não crescem; assim ficam alinhados às bordas */
+.titulo { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 26px; text-transform: uppercase; color: var(--text-strong); flex: 0 0 auto; }
+.link-lms { flex: 0 0 auto; }
+
+.icone-cruz {
+  width: 26px; height: 26px; border-radius: 4px;
+  background: var(--red-main); position: relative;
+}
+.icone-cruz::before, .icone-cruz::after {
+  content: ""; position: absolute; background: #fff; border-radius: 2px;
+}
+.icone-cruz::before { width: 64%; height: 20%; left: 18%; top: 40%; }
+.icone-cruz::after  { width: 20%; height: 64%; left: 40%; top: 18%; }
+
+.indicator {
+  font-size: 12.5px;
+  color: #8b8f95;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+/* Tabelas */
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 15.5px; table-layout: fixed;
+}
+colgroup col:nth-child(1) { width: var(--col1); }
+colgroup col:nth-child(2) { width: var(--col2); }
+colgroup col:nth-child(3) { width: var(--col3); }
+thead th, tbody td {
+  padding: var(--cell-pt) var(--cell-pr) var(--cell-pb) var(--cell-pl);
+  border: none; box-sizing: border-box;
+}
+thead th {
+  background: #fff; color: var(--text-strong);
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: .4px; text-align: center;
+}
+tbody tr.group-header th {
+  background: linear-gradient(to right, var(--red-main), var(--red-mid));
+  color: #fff; font-weight: 700; text-align: left;
+  padding: 10px 16px; border-radius: 8px;
+}
+tbody tr {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .06);
+}
+tbody td { color: var(--text-strong); font-weight: 700; font-size: 12.5px;}
+td:nth-child(2), td:nth-child(3) { text-align: center; }
+.valor { display: inline-block; min-width: 44px; text-align: center; }
+
+/* pill (Novo) — uniform style taken from model HTMLs; background color provided by JS via --pill-bg or inline */
+.pill {
+  padding: 6px 8px;
+  background: var(--pill-bg, var(--red-mid));
+  box-shadow: 0 0 13.6px rgba(255,255,255,0.25);
+  border-radius: 79px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-inline-start: 8px;
+  vertical-align: middle;
+}
+.pill-text {
+  display: flex;
+  align-items: center;
+  color: #FAF9F6;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  white-space: nowrap;
+}
+.pill .star {
+  margin-right: 6px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Centraliza especificamente a coluna "ID catálogo integrado" */
+td[data-label="ID catálogo integrado"] { text-align: center; }
+
+@media print {
+  /* Forçar A4 landscape; remover margens por @page (o usuário deve escolher "Margins: None") */
+  @page { size: A4 landscape; margin: 0mm; }
+
+  html, body { height: 100%; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body > .faixa-esquerda { display: none !important; }
+
+  .page {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 297mm;
+    min-height: 210mm;
+    height: 210mm;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 6mm 10mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    overflow: hidden;
+  }
+
+  /* faixa lateral sem background global (JS aplica degradê inline) */
+  .page > .faixa-esquerda,
+  .page .faixa-esquerda {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    height: 100% !important;
+    width: 6mm !important;
+    z-index: 1000 !important;
+  }
+
+  /* HEADER: manter o mesmo comportamento do preview (esquerda + direita) */
+  .wrap.header-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;    /* força usar toda a largura imprimível */
+    flex: 0 0 18mm;
+    padding-left: 8mm;
+    padding-right: 8mm;
+    gap: 10px;
+    z-index:1001;
+  }
+  .wrap.header-bar .titulo { text-align: left; margin: 0; flex: 0 0 auto; }
+  .wrap.header-bar .link-lms { margin-left: auto; white-space: nowrap; flex: 0 0 auto; }
+
+  /* Tabela: cabeçalho repete e linhas não são cortadas; limitar altura por linha em mm */
+  table { page-break-inside: auto; border-collapse: collapse; width: 100%; table-layout: fixed; }
+  thead { display: table-header-group; }
+  tbody { display: table-row-group; }
+  tr { page-break-inside: avoid; break-inside: avoid; }
+  td, th { page-break-inside: avoid; break-inside: avoid; }
+
+  /* altura máxima por linha e comportamento de fonte em overflow */
+  tbody td {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-top: 1.6mm;
+    padding-bottom: 1.6mm;
+    height: 7.5mm;
+    line-height: 7.5mm;
+    max-height: 7.5mm;
+    vertical-align: middle;
+    font-size: 10.5pt; /* base menor para impressão (reduzida em 0.5) */
+  }
+
+  /* coluna "novo" menor (aplica-se via colgroup), para garantir visual mais compacto */
+  colgroup col:nth-child(2) { width: var(--col2) !important; }
+
+  .wrap { padding-top: 2mm; padding-bottom: 2mm; }
+  .wrap > section { box-sizing: border-box; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+
+  tbody tr { box-shadow: none; background: transparent; }
+}
+
+/* ================= CAPA UNIFICADA ================= */
+
+.cover-page {
+  font-family: 'Gilroy', sans-serif;
+  width: 297mm;
+  height: 210mm;
+  box-sizing: border-box;
+  padding: 28mm 24mm;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+  color: #222;
+}
+
+.cover-header h1 {
+  font-size: 36px;
+  line-height: 44px;
+  text-transform: uppercase;
+  color: #510404;
+  margin-bottom: 8mm;
+}
+
+.cover-version {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cover-counters {
+  display: flex;
+  gap: 16mm;
+  margin: 24mm 0;
+}
+
+.cover-counter {
+  flex: 1;
+  padding: 16mm 8mm;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.cover-counter.total {
+  background: #510404;
+  color: #fff;
+}
+
+.cover-counter.new {
+  background: #EB7E71;
+  color: #510404;
+}
+
+.cover-counter .number {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cover-counter .label {
+  margin-top: 6mm;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.cover-breakdown h3 {
+  font-size: 18px;
+  margin-bottom: 6mm;
+}
+
+.cover-breakdown ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cover-breakdown li {
+  font-size: 14px;
+  margin-bottom: 3mm;
+}
+
+.cover-footer {
+  position: absolute;
+  bottom: 18mm;
+  right: 24mm;
+  font-size: 12px;
+  color: #666;
+}
+
+@media print {
+  .cover-page {
+    box-shadow: none;
+  }
+}

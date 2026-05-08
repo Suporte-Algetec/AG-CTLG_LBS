@@ -314,7 +314,10 @@ img { max-width: 100%; height: auto; display: block; }
 
 
 /* =========================
-   CAPA DO CATÁLOGO
+   CAPA DO CATÁLOGO – NOVO ESTILO
+   NOTE: catalog.css também contém estilos para .cover-page
+   Este arquivo está deprecated para estilos de catálogo.
+   Use catalog.css para manter separação clara.
 ========================= */
 
 .cover-page {

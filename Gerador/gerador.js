@@ -8,6 +8,16 @@ function ensureTemplatesCSS() {
   document.head.appendChild(link);
 }
 
+function ensureCatalogCSS() {
+  if (document.getElementById('catalog-css')) return;
+
+  const link = document.createElement('link');
+  link.id = 'catalog-css';
+  link.rel = 'stylesheet';
+  link.href = 'catalogo.css';
+  document.head.appendChild(link);
+}
+
 
 const fileInput = document.getElementById('file-input');
 const renderBtn = document.getElementById('render-btn');
@@ -564,6 +574,7 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     }
   }, locale);
   ensureTemplatesCSS();
+  ensureCatalogCSS();
   // inserir contracapa logo após a capa (valores vindos dos campos no index)
   try{
   const backImageInput = document.getElementById('back-image-input');

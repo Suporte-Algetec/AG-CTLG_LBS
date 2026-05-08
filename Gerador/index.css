@@ -1,0 +1,229 @@
+/* ===============================================
+   INDEX.CSS - Estilos exclusivos da página principal
+   Usado por: index.html
+   =============================================== */
+
+.app.centered { 
+  min-height: 100dvh; 
+  display: grid; 
+  place-items: center; 
+  padding: 24px; 
+}
+
+.card { 
+  width: 100%; 
+  max-width: 1100px; 
+  background: #fff; 
+  border-radius: 12px; 
+  box-shadow: 0 8px 30px rgba(0,0,0,.08); 
+  padding: 28px; 
+}
+
+.hero { 
+  text-align: center; 
+  margin-bottom: 20px; 
+}
+
+h1 { 
+  font-size: 28px; 
+  margin: 0 0 6px; 
+  color: var(--red-main); 
+}
+
+.subtitle { 
+  margin: 0; 
+  color: var(--text-muted); 
+}
+
+.controls { 
+  display: grid; 
+  grid-template-columns: 1fr 360px; 
+  gap: 16px; 
+  margin-top: 14px; 
+  align-items: stretch; 
+}
+
+.controls { /* safety: ensure grid layout is applied even if another rule was silently invalidated */
+  display: grid !important;
+  grid-template-columns: 1fr 360px !important;
+  gap: 16px !important;
+  align-items: stretch !important;
+}
+
+/* ensure children in the same grid row stretch to equal height */
+.controls .control { 
+  align-self: stretch; 
+}
+
+/* cover fields are direct children of .controls; make them stretch too */
+.controls > .cover-field { 
+  align-self: stretch; 
+}
+
+messages { 
+  grid-column: 1 / span 2; 
+}
+
+.control, .cover-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #eef2f5;
+  box-shadow: 0 6px 14px rgba(15,23,42,0.03);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.control span { 
+  display: block; 
+  font-weight: 600; 
+  color: var(--text-muted); 
+}
+
+.cover-field .label-text { 
+  display: block; 
+  font-weight: 600; 
+  color: var(--text-muted); 
+}
+
+/* ensure all form controls inside .control or .cover-field take full width */
+.control input[type="text"], 
+.control input[type="number"], 
+.control input[type="url"], 
+.control select, 
+.control textarea, 
+.control input[type="file"],
+.cover-field input[type="text"], 
+.cover-field input[type="number"], 
+.cover-field input[type="url"], 
+.cover-field select, 
+.cover-field textarea, 
+.cover-field input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #dfe7ee;
+  background: #fafafb;
+}
+
+input[type="file"], 
+input[type="url"], 
+button { 
+  padding: 10px 12px; 
+  border-radius: 8px; 
+  border: 1px solid #ccd; 
+  background: #fff; 
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, #fff, #f6f7f9);
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-strong);
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+
+.btn:active { 
+  transform: translateY(1px) scale(.998); 
+}
+
+.btn:focus { 
+  outline: 3px solid rgba(81,4,4,0.12); 
+  outline-offset: 2px; 
+}
+
+.btn.primary {
+  background: linear-gradient(180deg, var(--red-mid), var(--red-main));
+  color: #fff;
+  border: none;
+  box-shadow: 0 10px 30px rgba(81,4,4,0.12);
+}
+
+.btn.primary:hover { 
+  filter: brightness(1.03); 
+}
+
+.btn.large { 
+  font-size: 16px; 
+  padding: 12px 18px; 
+  border-radius: 12px; 
+}
+
+.toggle-btn { 
+  background: linear-gradient(180deg,#fff,#fff); 
+  border: 1px solid rgba(0,0,0,0.06); 
+}
+
+.cover-field textarea { 
+  resize: vertical; 
+  min-height: 150px; 
+  width: 100%;
+}
+
+/* animated show/hide for cover fields. Default: hidden (collapsed). Use .visible to show with transition. */
+.cover-field {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  overflow: hidden;
+  transition: max-height .36s cubic-bezier(.2,.9,.2,1), opacity .28s ease, transform .28s ease;
+}
+
+.cover-field.visible {
+  max-height: 800px; /* large enough to contain fields */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 520px){
+  #render-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2000;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(16,24,40,0.12);
+    background: var(--red-main);
+    color: #fff;
+    font-style: bold;
+  }
+}
+
+@media (max-width: 519px){
+  #render-btn { 
+    position: static; 
+    width: 100%; 
+  }
+  
+  .controls { 
+    grid-template-columns: 1fr; 
+  }
+  
+  /* on small screens, cover fields should flow like other controls */
+  .controls > .cover-field { 
+    grid-column: auto; 
+    grid-row: auto; 
+  }
+  
+  .messages { 
+    grid-column: auto; 
+  }
+}
+
+.messages { 
+  margin-top: 4px; 
+  color: #444; 
+  font-size: 14px; 
+  min-height: 20px; 
+}
