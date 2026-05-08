@@ -22,6 +22,7 @@ if(!preview){
 const messages = document.getElementById('messages');
 const lmsLinkInput = document.getElementById('lms-link');
 const langSelect = document.getElementById('lang-select');
+const showIntegratedPageInput = document.getElementById('show-integrated-page');
 
 // Cover-field visibility: hidden by default; toggled by a button; Spanish forces hidden
 let coverCustomized = false;
@@ -577,7 +578,10 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     const backText = (document.getElementById('back-text') && document.getElementById('back-text').value.trim()) || _bcFallback.text;
     const backCta = (document.getElementById('back-cta') && document.getElementById('back-cta').value.trim()) || _bcFallback.cta;
     const _defaultBackImage = selectedLang === 'es' ? 'images/catalogo-integrado-es.png' : 'images/catalogo-integrado.png';
-    insertBackCoverPage(preview, { image: backImageUrl || _defaultBackImage, title: backTitle, text: backText, cta: backCta });
+    const showIntegratedCatalogPage = showIntegratedPageInput ? showIntegratedPageInput.checked : true;
+    if (showIntegratedCatalogPage) {
+      insertBackCoverPage(preview, { image: backImageUrl || _defaultBackImage, title: backTitle, text: backText, cta: backCta });
+    }
   }catch(e){ console.warn('Falha ao inserir contracapa:', e); }
   
   const _prevDisplay = preview.style.display;
@@ -867,7 +871,7 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
   }
 
   
-  function measureRowsPerPage(palette){
+  function measureRowsPerPage(palette, lmsUrl){
     
     const meas = document.createElement('div');
     meas.style.position = 'absolute';
@@ -879,11 +883,12 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     
     
     
+    const lmsLink = lmsUrl ? `<a class="link-lms" style="display:inline-block;padding:6px 10px;border-radius:6px;background:linear-gradient(to right, ${palette.main}, ${palette.mid});color:#fff;">LMS</a>` : '';
     meas.innerHTML = `
       <div class="page" style="height:297mm; box-sizing:border-box; padding:18px 0 28px;">
         <div class="wrap header-bar" style="margin-bottom:6px; display:flex; align-items:center; gap:12px;">
           <div class="titulo"><img src="images/${palette.icon}" width="48" height="48" alt="" />${"TÍTULO"}</div>
-          <a class="link-lms" style="display:inline-block;padding:6px 10px;border-radius:6px;background:linear-gradient(to right, ${palette.main}, ${palette.mid});color:#fff;">LMS</a>
+          ${lmsLink}
         </div>
         <div class="wrap">
           <section>
@@ -930,7 +935,7 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
     const groupsArr = buildItemsByGroup(groups);
 
     
-    const rowsPerPage = measureRowsPerPage(palette);
+    const rowsPerPage = measureRowsPerPage(palette, lmsUrl);
 
     if(groupsArr.length === 0){
       const container = document.createElement('section');
@@ -952,9 +957,10 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
       headerBar.className = 'wrap header-bar';
       headerBar.style.marginBottom = '12px';
       const lmsHref = lmsUrl || '#';
+      const lmsLinkHtml = lmsUrl ? `<a class="link-lms" href="${lmsHref}" style="display:inline-block;background:linear-gradient(to right, ${palette.main}, ${palette.mid});color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;">${locale.linkText}</a>` : '';
       headerBar.innerHTML = `
         <div class="titulo"><img src="images/${palette.icon}" alt="" width="48" height="48" />${macro}</div>
-        <a class="link-lms" href="${lmsHref}" style="display:inline-block;background:linear-gradient(to right, ${palette.main}, ${palette.mid});color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;">${locale.linkText}</a>
+        ${lmsLinkHtml}
       `;
       container.appendChild(headerBar);
 
@@ -1011,20 +1017,22 @@ async function renderCatalog({ rows, tree, lmsUrl }) {
       titulo.appendChild(document.createTextNode(macro + (totalMacroPages > 1 ? ' — ' + (pageIndex+1) + '/' + totalMacroPages : '')));
       headerBar.appendChild(titulo);
 
-      const link2 = document.createElement('a');
-      link2.className = 'link-lms';
-      
-      link2.href = lmsUrl || '#';
-      link2.style.display = 'inline-block';
-      link2.style.background = `linear-gradient(to right, ${palette.main}, ${palette.mid})`;
-      link2.style.color = '#fff';
-      link2.style.textDecoration = 'none';
-      link2.style.fontWeight = '700';
-      link2.style.fontSize = '15px';
-      link2.style.padding = '10px 16px';
-      link2.style.borderRadius = '8px';
-  link2.textContent = locale.linkText;
-      headerBar.appendChild(link2);
+      if(lmsUrl){
+        const link2 = document.createElement('a');
+        link2.className = 'link-lms';
+        
+        link2.href = lmsUrl || '#';
+        link2.style.display = 'inline-block';
+        link2.style.background = `linear-gradient(to right, ${palette.main}, ${palette.mid})`;
+        link2.style.color = '#fff';
+        link2.style.textDecoration = 'none';
+        link2.style.fontWeight = '700';
+        link2.style.fontSize = '15px';
+        link2.style.padding = '10px 16px';
+        link2.style.borderRadius = '8px';
+    link2.textContent = locale.linkText;
+        headerBar.appendChild(link2);
+      }
 
       container.appendChild(headerBar);
 
